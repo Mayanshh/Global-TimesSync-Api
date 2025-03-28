@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Global TimeSync API{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+    
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <div class="container main-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="app-title">
+                        <i class="fas fa-clock me-2"></i>
+                        Global TimeSync API
+                    </h1>
+                    <p class="lead">High-performance UTC to local time conversion with DST handling</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <nav>
+                        <ul class="nav justify-content-md-end">
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.path == '/dashboard' %}active{% endif %}" href="/dashboard">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.path == '/api-docs' %}active{% endif %}" href="/api-docs">API Docs</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>
+                &copy; 2025 Global TimeSync API
+                <span class="mx-2">|</span>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-github me-1"></i>GitHub
+                </a>
+                <span class="mx-2">|</span>
+                <a href="/api-docs" target="_blank">API Documentation</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

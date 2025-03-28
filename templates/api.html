@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block title %}API Documentation - Global TimeSync API{% endblock %}
+
+{% block content %}
+<section class="mb-5">
+    <h2 class="mb-4">
+        <i class="fas fa-book me-2"></i>
+        API Documentation
+    </h2>
+    
+    <div class="alert alert-info mb-4">
+        <h4 class="alert-heading"><i class="fas fa-info-circle me-2"></i>Interactive API Docs</h4>
+        <p>For interactive API documentation with request builders, visit our <a href="/docs" class="alert-link" target="_blank">Swagger UI</a> or <a href="/redoc" class="alert-link" target="_blank">ReDoc</a> pages.</p>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="h5 mb-0">Authentication</h3>
+        </div>
+        <div class="card-body">
+            <p>The API uses JSON Web Tokens (JWT) for authentication. To authenticate your requests:</p>
+            
+            <ol>
+                <li class="mb-3">
+                    <strong>Register a new user account:</strong>
+                    <div class="endpoint-card p-3 rounded mt-2" style="background: rgba(0,0,0,0.05);">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="method-badge bg-success me-2">POST</span>
+                            <span class="endpoint-url">/api/auth/register</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Request Body:</strong></p>
+                                <pre class="response-example">
+{
+  "username": "your_username",
+  "email": "your@email.com",
+  "password": "your_password",
+  "full_name": "Your Name" // optional
+}
+                                </pre>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Response:</strong></p>
+                                <pre class="response-example">
+{
+  "username": "your_username",
+  "email": "your@email.com",
+  "full_name": "Your Name",
+  "disabled": false
+}
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                
+                <li class="mb-3">
+                    <strong>Obtain an access token:</strong>
+                    <div class="endpoint-card p-3 rounded mt-2" style="background: rgba(0,0,0,0.05);">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="method-badge bg-success me-2">POST</span>
+                            <span class="endpoint-url">/api/auth/token</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Request (form data):</strong></p>
+                                <pre class="response-example">
+username=your_username
+password=your_password
+                                </pre>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Response:</strong></p>
+                                <pre class="response-example">
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer"
+}
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                
+                <li>
+                    <strong>Use the token in your requests:</strong>
+                    <p class="mt-2">Add the following header to your API requests:</p>
+                    <pre class="response-example">Authorization: Bearer your_access_token</pre>
+                </li>
+            </ol>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="h5 mb-0">Time Conversion Endpoints</h3>
+        </div>
+        <div class="card-body">
+            <!-- Convert Endpoint -->
+            <div class="endpoint-card p-3 rounded mb-3" style="background: rgba(0,0,0,0.05);">
+                <h4 class="h6 mb-2">Convert UTC Time to Target Timezone</h4>
+                
+                <div class="d-flex align-items-center mb-2">
+                    <span class="method-badge bg-primary me-2">GET</span>
+                    <span class="endpoint-url">/api/timesync/convert</span>
+                </div>
+                
+                <div class="mb-3">
+                    <p class="mb-1"><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>utc_timestamp</code> - ISO 8601 UTC timestamp (e.g., <code>2023-05-01T12:00:00Z</code>)</li>
+                        <li><code>target_timezone</code> - Target timezone name (e.g., <code>America/New_York</code>)</li>
+                    </ul>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Example Request:</strong></p>
+                        <pre class="response-example">GET /api/timesync/convert?utc_timestamp=2023-05-01T12:00:00Z&target_timezone=America/New_York
+Authorization: Bearer your_access_token</pre>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Example Response:</strong></p>
+                        <pre class="response-example">
+{
+  "utc_timestamp": "2023-05-01T12:00:00+00:00",
+  "local_timestamp": "2023-05-01T08:00:00-04:00", 
+  "timezone": "America/New_York",
+  "offset": "-04:00",
+  "is_dst": true
+}
+                        </pre>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Convert POST Endpoint -->
+            <div class="endpoint-card p-3 rounded mb-3" style="background: rgba(0,0,0,0.05);">
+                <h4 class="h6 mb-2">Convert UTC Time to Target Timezone (POST method)</h4>
+                
+                <div class="d-flex align-items-center mb-2">
+                    <span class="method-badge bg-success me-2">POST</span>
+                    <span class="endpoint-url">/api/timesync/convert</span>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Request Body:</strong></p>
+                        <pre class="response-example">
+{
+  "utc_timestamp": "2023-05-01T12:00:00Z",
+  "target_timezone": "Europe/Paris"
+}
+                        </pre>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Example Response:</strong></p>
+                        <pre class="response-example">
+{
+  "utc_timestamp": "2023-05-01T12:00:00+00:00",
+  "local_timestamp": "2023-05-01T14:00:00+02:00",
+  "timezone": "Europe/Paris",
+  "offset": "+02:00",
+  "is_dst": true
+}
+                        </pre>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Get all timezones -->
+            <div class="endpoint-card p-3 rounded mb-3" style="background: rgba(0,0,0,0.05);">
+                <h4 class="h6 mb-2">Get All Available Timezones</h4>
+                
+                <div class="d-flex align-items-center mb-2">
+                    <span class="method-badge bg-primary me-2">GET</span>
+                    <span class="endpoint-url">/api/timesync/timezones</span>
+                </div>
+                
+                <div class="mb-3">
+                    <p class="mb-1"><strong>No parameters required</strong></p>
+                </div>
+                
+                <div>
+                    <p class="mb-1"><strong>Example Response:</strong></p>
+                    <pre class="response-example">
+[
+  "Africa/Abidjan",
+  "Africa/Accra",
+  "Africa/Addis_Ababa",
+  ...
+  "Pacific/Wake",
+  "Pacific/Wallis",
+  "UTC"
+]
+                    </pre>
+                </div>
+            </div>
+            
+            <!-- Timezone info -->
+            <div class="endpoint-card p-3 rounded mb-3" style="background: rgba(0,0,0,0.05);">
+                <h4 class="h6 mb-2">Get Timezone Information</h4>
+                
+                <div class="d-flex align-items-center mb-2">
+                    <span class="method-badge bg-primary me-2">GET</span>
+                    <span class="endpoint-url">/api/timesync/timezone/{timezone}</span>
+                </div>
+                
+                <div class="mb-3">
+                    <p class="mb-1"><strong>Path Parameters:</strong></p>
+                    <ul>
+                        <li><code>timezone</code> - Timezone name (e.g., <code>America/New_York</code>)</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <p class="mb-1"><strong>Example Response:</strong></p>
+                    <pre class="response-example">
+{
+  "name": "America/New_York",
+  "country_code": "US",
+  "current_time": "2023-10-15T08:30:00-04:00",
+  "offset": "-04:00",
+  "is_dst": true
+}
+                    </pre>
+                </div>
+            </div>
+            
+            <!-- Current time -->
+            <div class="endpoint-card p-3 rounded mb-3" style="background: rgba(0,0,0,0.05);">
+                <h4 class="h6 mb-2">Get Current Time in Timezone</h4>
+                
+                <div class="d-flex align-items-center mb-2">
+                    <span class="method-badge bg-primary me-2">GET</span>
+                    <span class="endpoint-url">/api/timesync/now/{timezone}</span>
+                </div>
+                
+                <div class="mb-3">
+                    <p class="mb-1"><strong>Path Parameters:</strong></p>
+                    <ul>
+                        <li><code>timezone</code> - Timezone name (e.g., <code>Asia/Tokyo</code>)</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <p class="mb-1"><strong>Example Response:</strong></p>
+                    <pre class="response-example">
+{
+  "timezone": "Asia/Tokyo",
+  "local_time": "2023-10-15T21:30:00+09:00",
+  "utc_time": "2023-10-15T12:30:00+00:00",
+  "offset": "+09:00",
+  "is_dst": false
+}
+                    </pre>
+                </div>
+            </div>
+            
+            <!-- Popular timezones -->
+            <div class="endpoint-card p-3 rounded" style="background: rgba(0,0,0,0.05);">
+                <h4 class="h6 mb-2">Get Popular Timezones</h4>
+                
+                <div class="d-flex align-items-center mb-2">
+                    <span class="method-badge bg-primary me-2">GET</span>
+                    <span class="endpoint-url">/api/timesync/popular-timezones</span>
+                </div>
+                
+                <div class="mb-3">
+                    <p class="mb-1"><strong>No parameters required</strong></p>
+                </div>
+                
+                <div>
+                    <p class="mb-1"><strong>Example Response:</strong></p>
+                    <pre class="response-example">
+[
+  {
+    "name": "America/New_York",
+    "country_code": "US",
+    "current_time": "2023-10-15T08:30:00-04:00",
+    "offset": "-04:00",
+    "is_dst": true
+  },
+  {
+    "name": "Europe/London",
+    "country_code": "GB",
+    "current_time": "2023-10-15T13:30:00+01:00",
+    "offset": "+01:00",
+    "is_dst": true
+  },
+  ...
+]
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="h5 mb-0">Error Handling</h3>
+        </div>
+        <div class="card-body">
+            <p>The API uses standard HTTP status codes and returns detailed error messages:</p>
+            
+            <div class="endpoint-card p-3 rounded mb-3" style="background: rgba(0,0,0,0.05);">
+                <h4 class="h6 mb-2">Example Error Response (400 Bad Request)</h4>
+                <pre class="response-example">
+{
+  "detail": "Invalid timezone: Europe/InvalidCity"
+}
+                </pre>
+            </div>
+            
+            <div class="endpoint-card p-3 rounded mb-3" style="background: rgba(0,0,0,0.05);">
+                <h4 class="h6 mb-2">Example Error Response (401 Unauthorized)</h4>
+                <pre class="response-example">
+{
+  "detail": "Could not validate credentials"
+}
+                </pre>
+            </div>
+            
+            <div class="endpoint-card p-3 rounded" style="background: rgba(0,0,0,0.05);">
+                <h4 class="h6 mb-2">Example Error Response (500 Internal Server Error)</h4>
+                <pre class="response-example">
+{
+  "detail": "Error converting time: [error details]"
+}
+                </pre>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

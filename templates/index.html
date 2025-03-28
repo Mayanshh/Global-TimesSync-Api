@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Global TimeSync API - UTC to Local Time Conversion{% endblock %}
+
+{% block content %}
+<section class="hero-section text-center py-5">
+    <div class="container">
+        <h1 class="display-4 mb-4">Time Conversion Made Simple</h1>
+        <p class="lead mb-4">
+            A high-performance API for converting UTC timestamps to local time zones with automatic DST handling
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/dashboard" class="btn btn-primary btn-lg">
+                <i class="fas fa-tachometer-alt me-2"></i>Open Dashboard
+            </a>
+            <a href="/api-docs" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-code me-2"></i>API Documentation
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="features-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Key Features</h2>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-bolt fa-3x"></i>
+                        </div>
+                        <h3 class="card-title">High Performance</h3>
+                        <p class="card-text">
+                            Built with FastAPI for blazing-fast responses and efficient processing
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-calendar-alt fa-3x"></i>
+                        </div>
+                        <h3 class="card-title">Automatic DST</h3>
+                        <p class="card-text">
+                            Handles daylight saving time transitions automatically across all time zones
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-globe fa-3x"></i>
+                        </div>
+                        <h3 class="card-title">Global Coverage</h3>
+                        <p class="card-text">
+                            Support for all IANA time zones worldwide with continuously updated database
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-tachometer-alt fa-3x"></i>
+                        </div>
+                        <h3 class="card-title">Optimized Caching</h3>
+                        <p class="card-text">
+                            Smart caching system for repeated conversions to minimize latency
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-code fa-3x"></i>
+                        </div>
+                        <h3 class="card-title">Developer Friendly</h3>
+                        <p class="card-text">
+                            Clean RESTful API with comprehensive documentation and examples
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-shield-alt fa-3x"></i>
+                        </div>
+                        <h3 class="card-title">Simple Authentication</h3>
+                        <p class="card-text">
+                            Secure your API requests with JWT-based authentication
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="quick-start py-5 bg-light rounded">
+    <div class="container">
+        <h2 class="text-center mb-5">Quick Start Guide</h2>
+        
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <h3>Step 1: Register for an API Key</h3>
+                <p>Sign up for a free account to get your API key:</p>
+                <div class="card code-card">
+                    <div class="card-body">
+                        <pre><code>POST /api/auth/register
+{
+  "username": "your_username",
+  "email": "your@email.com",
+  "password": "your_password"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-4">
+                <h3>Step 2: Get Your Access Token</h3>
+                <p>Use your credentials to obtain a JWT token:</p>
+                <div class="card code-card">
+                    <div class="card-body">
+                        <pre><code>POST /api/auth/token
+{
+  "username": "your_username",
+  "password": "your_password"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-4">
+                <h3>Step 3: Make API Requests</h3>
+                <p>Use your token to make authenticated requests:</p>
+                <div class="card code-card">
+                    <div class="card-body">
+                        <pre><code>GET /api/timesync/convert?utc_timestamp=2023-10-15T12:00:00Z&target_timezone=America/New_York
+Authorization: Bearer your_jwt_token</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-4">
+                <h3>Step 4: Parse the Response</h3>
+                <p>Process the JSON response:</p>
+                <div class="card code-card">
+                    <div class="card-body">
+                        <pre><code>{
+  "utc_timestamp": "2023-10-15T12:00:00+00:00",
+  "local_timestamp": "2023-10-15T08:00:00-04:00",
+  "timezone": "America/New_York",
+  "offset": "-04:00",
+  "is_dst": true
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="/api-docs" class="btn btn-primary">
+                <i class="fas fa-book me-2"></i>Read Full Documentation
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section text-center py-5 my-5">
+    <div class="container">
+        <h2 class="mb-4">Ready to Get Started?</h2>
+        <p class="lead mb-4">
+            Try our dashboard for manual conversions or integrate our API into your application
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/dashboard" class="btn btn-primary btn-lg">
+                <i class="fas fa-tachometer-alt me-2"></i>Try the Dashboard
+            </a>
+            <a href="/docs" class="btn btn-outline-secondary btn-lg" target="_blank">
+                <i class="fas fa-code me-2"></i>Explore the API
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

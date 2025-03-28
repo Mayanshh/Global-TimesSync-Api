@@ -1,0 +1,122 @@
+/* Global TimeSync API - Custom Styles */
+
+/* General Layout */
+body {
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+}
+
+.main-container {
+    max-width: 1200px;
+}
+
+/* Header Styling */
+.app-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+.app-title {
+    font-weight: 700;
+}
+
+/* Time Conversion Section */
+.conversion-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.conversion-form {
+    margin-bottom: 1rem;
+}
+
+/* Search Results Dropdown */
+#search-results {
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* World Clock Section */
+.world-clock-container {
+    margin-bottom: 2rem;
+}
+
+.timezone-card {
+    height: 100%;
+}
+
+.timezone-time {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+}
+
+/* Conversion History */
+.history-section {
+    margin-top: 2rem;
+}
+
+/* API Documentation */
+.api-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.endpoint-card {
+    margin-bottom: 1rem;
+}
+
+.method-badge {
+    font-family: monospace;
+    padding: 0.25rem 0.5rem;
+}
+
+.endpoint-url {
+    font-family: monospace;
+    word-break: break-all;
+}
+
+.response-example {
+    font-family: monospace;
+    font-size: 0.9rem;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: var(--bs-dark);
+    color: var(--bs-light);
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+/* Utilities */
+.text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 0.2em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spinner-border 0.75s linear infinite;
+}
+
+/* Footer */
+.app-footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--bs-border-color);
+    text-align: center;
+    font-size: 0.9rem;
+}

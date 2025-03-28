@@ -102,18 +102,49 @@ async function loadTimezones() {
  */
 async function loadPopularTimezones() {
     try {
-        const response = await fetch(`${config.apiBase}/popular-timezones`);
-        if (!response.ok) {
-            throw new Error(`Failed to load popular timezones: ${response.statusText}`);
+        // Default fallback timezones if API fails
+        const fallbackTimezones = [
+            {
+                name: "UTC",
+                current_time: new Date().toISOString(),
+                offset: "+00:00",
+                is_dst: false
+            }
+        ];
+        
+        try {
+            const response = await fetch(`${config.apiBase}/popular-timezones`);
+            if (!response.ok) {
+                throw new Error(`Failed to load popular timezones: ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            if (Array.isArray(data) && data.length > 0) {
+                state.popularTimezones = data;
+                console.log(`Loaded ${state.popularTimezones.length} popular timezones`);
+            } else {
+                // Fallback if API returns empty array
+                console.warn("API returned empty popular timezones array");
+                state.popularTimezones = fallbackTimezones;
+            }
+        } catch (apiError) {
+            console.error("Error loading popular timezones:", apiError);
+            // Use fallback timezones
+            state.popularTimezones = fallbackTimezones;
         }
         
-        state.popularTimezones = await response.json();
+        // Render regardless of source (API or fallback)
         renderPopularTimezones();
         
-        console.log(`Loaded ${state.popularTimezones.length} popular timezones`);
     } catch (error) {
-        console.error("Error loading popular timezones:", error);
-        showError("Failed to load world clock data. Please try refreshing the page.");
+        console.error("Fatal error in loadPopularTimezones:", error);
+        if (elements.popularTimezonesContainer) {
+            elements.popularTimezonesContainer.innerHTML = `
+                <div class="alert alert-warning">
+                    Failed to load world clock data. Please try refreshing the page.
+                </div>
+            `;
+        }
     }
 }
 
@@ -307,8 +338,14 @@ async function convertTime(e) {
         const response = await fetch(`${config.apiBase}/convert?utc_timestamp=${encodeURIComponent(utcTimestamp)}&target_timezone=${encodeURIComponent(targetTimezone)}`);
         
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.detail || "Error converting time");
+            let errorMessage = "Error converting time";
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.detail || errorData.error || "Error converting time";
+            } catch (jsonError) {
+                console.error("Error parsing error response:", jsonError);
+            }
+            throw new Error(errorMessage);
         }
         
         const result = await response.json();

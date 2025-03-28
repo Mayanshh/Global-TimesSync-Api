@@ -107,12 +107,16 @@ timesync_bp = Blueprint('timesync', __name__, url_prefix='/api/timesync')
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 # TimeSync Routes
-@timesync_bp.route('/convert', methods=['POST'])
+@timesync_bp.route('/convert', methods=['POST', 'GET'])
 def convert_time_route():
     try:
-        data = request.get_json()
-        utc_timestamp = data.get('utc_timestamp')
-        target_timezone = data.get('target_timezone')
+        if request.method == 'GET':
+            utc_timestamp = request.args.get('utc_timestamp')
+            target_timezone = request.args.get('target_timezone')
+        else:
+            data = request.get_json()
+            utc_timestamp = data.get('utc_timestamp')
+            target_timezone = data.get('target_timezone')
         
         if not utc_timestamp or not target_timezone:
             return jsonify({"error": "Missing required fields"}), 400
@@ -217,6 +221,7 @@ def get_timezone_info_route(timezone):
         return jsonify({"error": f"Error processing timezone info: {str(e)}"}), 500
 
 @timesync_bp.route('/popular', methods=['GET'])
+@timesync_bp.route('/popular-timezones', methods=['GET'])
 def get_popular_timezones_route():
     popular_zones = [
         "America/New_York", "America/Los_Angeles", "America/Chicago",

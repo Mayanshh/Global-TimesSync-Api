@@ -7,13 +7,35 @@ import jwt
 from passlib.context import CryptContext
 from flask import Flask, render_template, request, jsonify, send_from_directory, Blueprint
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG)
+# Configure logging - use INFO for production
+if os.environ.get('FLASK_ENV') == 'development':
+    log_level = logging.DEBUG
+else:
+    log_level = logging.INFO
+
+logging.basicConfig(
+    level=log_level,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
 # Create Flask app
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("JWT_SECRET", "insecure_default_secret_key_for_development")
+
+# Add production error handlers
+@app.errorhandler(404)
+def not_found(error):
+    if request.path.startswith('/api/'):
+        return jsonify({"status": "error", "detail": "Resource not found"}), 404
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def server_error(error):
+    logger.error(f"Server error: {error}")
+    if request.path.startswith('/api/'):
+        return jsonify({"status": "error", "detail": "Internal server error"}), 500
+    return render_template('500.html'), 500
 
 # Initialize password context for authentication
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -378,6 +400,11 @@ app.register_blueprint(auth_bp)
 @app.route('/static/<path:path>')
 def serve_static(path):
     return send_from_directory('static', path)
+
+# Serve robots.txt from static directory
+@app.route('/robots.txt')
+def serve_robots():
+    return send_from_directory('static', 'robots.txt')
 
 # Home route
 @app.route('/')

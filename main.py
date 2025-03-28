@@ -6,6 +6,10 @@ from dateutil import parser
 import jwt
 from passlib.context import CryptContext
 from flask import Flask, render_template, request, jsonify, send_from_directory, Blueprint
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure logging - use INFO for production
 if os.environ.get('FLASK_ENV') == 'development':
@@ -43,7 +47,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # JWT Secret and configuration
 SECRET_KEY = os.environ.get("JWT_SECRET", "insecure_default_secret_key_for_development")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get("JWT_EXPIRATION_MINUTES", 30))
 
 # Mock user database (would be replaced with a real database in production)
 fake_users_db = {
@@ -187,8 +191,9 @@ def convert_time_route():
             "is_dst": is_dst
         }
             
-        # Store in cache for 1 hour
-        time_cache.set(cache_key, result, 3600)
+        # Store in cache for specified TTL (default 1 hour)
+        cache_ttl = int(os.environ.get("CACHE_TTL", 3600))
+        time_cache.set(cache_key, result, cache_ttl)
             
         return jsonify(result)
     except Exception as e:
@@ -234,8 +239,9 @@ def get_timezone_info_route(timezone):
             "is_dst": now.dst().total_seconds() > 0
         }
             
-        # Store in cache for 5 minutes
-        time_cache.set(f"timezone_info:{timezone}", result, 300)
+        # Store in cache for timezone info
+        timezone_info_ttl = int(os.environ.get("TIMEZONE_INFO_CACHE_TTL", 300))
+        time_cache.set(f"timezone_info:{timezone}", result, timezone_info_ttl)
             
         return jsonify(result)
     except Exception as e:
@@ -285,8 +291,9 @@ def get_popular_timezones_route():
                 "is_dst": now.dst().total_seconds() > 0
             }
                 
-            # Store in cache for 5 minutes
-            time_cache.set(f"timezone_info:{zone}", result, 300)
+            # Store in cache for timezone info
+            timezone_info_ttl = int(os.environ.get("TIMEZONE_INFO_CACHE_TTL", 300))
+            time_cache.set(f"timezone_info:{zone}", result, timezone_info_ttl)
             results.append(result)
         except Exception as e:
             logger.error(f"Error getting info for {zone}: {str(e)}")
@@ -434,4 +441,6 @@ def protected_route():
     return jsonify({"status": "error", "detail": "Invalid authorization header"}), 401
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    debug_mode = os.environ.get("FLASK_DEBUG", "1") == "1"
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)

@@ -1,0 +1,14 @@
+.git
+.gitignore
+.env
+__pycache__/
+venv/
+.idea/
+.vscode/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+.env.example
+deployment_guide.md

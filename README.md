@@ -4,107 +4,85 @@ A high-performance API service for UTC to local time conversion with automatic D
 
 ## Features
 
-- **Timezone Conversion**: Convert timestamps between UTC and any local timezone
-- **DST Handling**: Automatic daylight saving time adjustments
-- **Popular Timezones**: Quick access to commonly used timezones
-- **High Performance**: Optimized for speed with response caching
-- **Developer-friendly**: Simple REST endpoints with clear documentation
-- **Interactive Dashboard**: Web interface for manual time conversions
-- **Authentication**: Secure API access with JWT authentication
+- **Time Zone Conversion**: Convert UTC timestamps to any target time zone with proper DST handling
+- **Comprehensive Time Zone Database**: Support for all standard IANA time zones
+- **High Performance**: Built with performance in mind, including robust caching
+- **Easy Integration**: Simple REST API for seamless integration into any application
+- **User Authentication**: Secure JWT-based authentication system
+- **Interactive Dashboard**: Web-based dashboard for manual time conversions
+- **Detailed Time Zone Information**: Get offset, DST status, and current time for any zone
 
-## Getting Started
-
-### Prerequisites
-
-- Python 3.9+
-- Flask
-- PostgreSQL database
-- Additional dependencies in requirements.txt
-
-### Installation
+## Quick Start
 
 1. Clone the repository
-```bash
-git clone https://github.com/yourusername/global-timesync-api.git
-cd global-timesync-api
-```
-
-2. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-3. Set up environment variables
-```bash
-export JWT_SECRET=your_secure_secret_key
-export DATABASE_URL=postgresql://username:password@localhost/timesync
-```
-
-4. Run the application
-```bash
-python main.py
-```
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+3. Set up environment variables (see `.env.example`)
+4. Run the application:
+   ```
+   python main.py
+   ```
+5. Access the dashboard at `http://localhost:5000/`
+6. API documentation available at `http://localhost:5000/api`
 
 ## API Endpoints
 
 ### Authentication
 
-- **POST /api/auth/token** - Get access token
-- **POST /api/auth/register** - Register new user
-- **GET /api/auth/users/me** - Get current user details
+- `POST /login`: Obtain JWT access token
+- `POST /register`: Register a new user
+- `GET /users/me`: Get current user information
 
-### Time Conversion
+### Time Zone Operations
 
-- **POST /api/timesync/convert** - Convert between timezones
-- **GET /api/timesync/convert** - Convert between timezones (GET method)
-- **GET /api/timesync/timezones** - Get all available timezones
-- **GET /api/timesync/timezone/{timezone}** - Get timezone details
-- **GET /api/timesync/popular-timezones** - Get popular timezones
+- `GET /timezones`: List all available time zones
+- `GET /timezones/popular`: Get popular time zones
+- `GET /timezones/{timezone}`: Get detailed information about a specific time zone
+- `POST /convert`: Convert a UTC timestamp to a target time zone
+- `GET /convert`: Convert a UTC timestamp (query parameters)
 
-## Web Dashboard
+## Dashboard
 
-Access the web dashboard at `/dashboard` to:
-- Convert timestamps between timezones
-- View world clocks for popular timezones
-- Access conversion history
+The dashboard provides a user-friendly interface for:
 
-## Architecture
-
-The Global TimeSync API is built with a focus on performance and reliability:
-
-- **Web Framework**: Flask
-- **Data Models**: SQLAlchemy/Pydantic
-- **Authentication**: JWT with bcrypt password hashing
-- **Caching**: In-memory cache for timezone data
-- **Error Handling**: Comprehensive error handling with descriptive messages
+- Converting timestamps between time zones
+- Viewing a world clock of popular time zones
+- Accessing your conversion history
+- Managing favorite time zones
 
 ## Development
 
-### Project Structure
+### Prerequisites
+
+- Python 3.9+
+- Flask
+- PostgreSQL (optional for production)
+
+### Environment Variables
+
+Create a `.env` file based on `.env.example` with the following variables:
+
+- `JWT_SECRET`: Secret key for JWT token generation
+- `DATABASE_URL`: PostgreSQL connection string (optional)
+- `FLASK_ENV`: Set to 'development' or 'production'
+- `FLASK_APP`: Set to 'main.py'
+
+### Running Tests
 
 ```
-├── api/
-│   ├── auth.py         # Authentication logic
-│   ├── cache.py        # Caching implementation
-│   ├── config.py       # Configuration settings
-│   ├── models.py       # Data models
-│   └── timesync.py     # Core timezone functionality
-├── static/             # Static assets
-├── templates/          # HTML templates
-├── main.py             # Application entry point
-└── README.md           # This file
+pytest tests/
 ```
 
-## Contributing
+## Deployment
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+See [deployment_guide.md](deployment_guide.md) for detailed AWS deployment instructions.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT
 
-## Acknowledgements
+## Author
 
-- [pytz](https://pythonhosted.org/pytz/) for timezone database
-- [Flask](https://flask.palletsprojects.com/) web framework
-- Built by Mayansh Bangali (https://github.com/Mayanshh)
+Developed by Mayansh Bangali - [GitHub Profile](https://github.com/Mayanshh)

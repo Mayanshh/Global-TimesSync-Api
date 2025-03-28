@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /api/
-Disallow: /protected
+Disallow: /login
+Disallow: /register
+Disallow: /users/me
 
-Sitemap: https://[your-domain]/sitemap.xml
+Sitemap: https://timesync-api.example.com/sitemap.xml

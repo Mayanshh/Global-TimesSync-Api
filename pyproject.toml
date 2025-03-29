@@ -5,7 +5,6 @@ description = "A high-performance API service for UTC to local time conversion w
 authors = ["Mayansh Bangali <https://github.com/Mayanshh>"]
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.9,<4.0"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"

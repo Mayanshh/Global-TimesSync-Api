@@ -1,23 +1,31 @@
-[project]
-name = "repl-nix-workspace"
-version = "0.1.0"
-description = "Add your description here"
-requires-python = ">=3.11"
-dependencies = [
-    "bcrypt>=4.3.0",
-    "email-validator>=2.2.0",
-    "fastapi>=0.115.12",
-    "flask>=3.1.0",
-    "flask-sqlalchemy>=3.1.1",
-    "gunicorn[uvicorn]>=23.0.0",
-    "passlib>=1.7.4",
-    "psycopg2-binary>=2.9.10",
-    "pydantic>=2.11.0",
-    "pyjwt>=2.10.1",
-    "python-dateutil>=2.9.0.post0",
-    "python-dotenv>=1.1.0",
-    "python-jose>=3.4.0",
-    "python-multipart>=0.0.20",
-    "pytz>=2025.2",
-    "uvicorn>=0.34.0",
-]
+[tool.poetry]
+name = "global-timesync-api"
+version = "1.0.0"
+description = "A high-performance API service for UTC to local time conversion with automatic DST handling"
+authors = ["Mayansh Bangali <https://github.com/Mayanshh>"]
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9,<4.0"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+bcrypt = "^4.0.1"
+email-validator = "^2.0.0"
+fastapi = "^0.95.1"
+flask = "^2.3.2"
+flask-sqlalchemy = "^3.0.3"
+gunicorn = "^23.0.0"
+passlib = "^1.7.4"
+psycopg2-binary = "^2.9.6"
+pydantic = "^1.10.7"
+pyjwt = "^2.7.0"
+python-dateutil = "^2.8.2"
+python-dotenv = "^1.0.0"
+python-jose = "^3.3.0"
+python-multipart = "^0.0.6"
+pytz = "^2023.3"
+uvicorn = "^0.22.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,1 +1,1 @@
-web: python -m gunicorn.app.wsgiapp --bind 0.0.0.0:$PORT --reuse-port main:app
+web: gunicorn --bind 0.0.0.0:$PORT --reuse-port main:app

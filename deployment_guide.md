@@ -1,138 +1,114 @@
-# AWS Free Tier Deployment Guide for Global TimeSync API
+# Render Deployment Guide for Global TimeSync API
 
-This guide outlines the steps to deploy the Global TimeSync API to AWS Free Tier services.
+This guide outlines the steps to deploy the Global TimeSync API to Render through GitHub.
 
 ## Prerequisites
 
-1. AWS Account with Free Tier access
-2. AWS CLI installed and configured
+1. GitHub account
+2. Render account (free tier available)
 3. Git installed
-4. Python 3.9+ installed
+4. Python 3.9+ installed locally for development
 
-## Step 1: Prepare Your Environment Variables
+## Step 1: Push Your Code to GitHub
 
-Before deploying, make sure you've set up the following environment variables in your `.env` file:
+1. Create a new GitHub repository
+2. Initialize your local repository (if not already done):
+   ```
+   git init
+   git add .
+   git commit -m "Initial commit"
+   ```
+3. Add your GitHub repository as a remote and push your code:
+   ```
+   git remote add origin https://github.com/yourusername/global-timesync-api.git
+   git branch -M main
+   git push -u origin main
+   ```
+
+## Step 2: Set Up a Render Web Service
+
+1. Log in to your Render dashboard
+2. Click "New" and select "Web Service"
+3. Connect your GitHub account if you haven't already
+4. Select the repository with your Global TimeSync API code
+5. Configure the following settings:
+   - **Name**: `global-timesync-api` (or your preferred name)
+   - **Environment**: Python
+   - **Region**: Choose the region closest to your users
+   - **Branch**: main (or your default branch)
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `gunicorn --bind 0.0.0.0:$PORT --reuse-port main:app`
+   - **Instance Type**: Free (for testing, upgrade for production)
+
+## Step 3: Configure Environment Variables
+
+In the Render dashboard for your web service, go to the "Environment" tab and add the following variables:
 
 ```
 FLASK_ENV=production
 FLASK_APP=main.py
 FLASK_DEBUG=0
 JWT_SECRET=your_secure_random_string
-DATABASE_URL=your_database_connection_string
+PORT=10000
+TIMEZONE_INFO_CACHE_TTL=300
+DEFAULT_CACHE_TTL=3600
 ```
 
-**Important:** Never commit your `.env` file to version control. Instead, these values should be configured in AWS.
-
-## Step 2: Create an RDS PostgreSQL Database Instance
-
-1. Log in to the AWS Management Console
-2. Navigate to RDS (Relational Database Service)
-3. Click "Create Database"
-4. Choose "Standard Create"
-5. Select "PostgreSQL"
-6. Choose "Free Tier" template
-7. Set DB instance identifier (e.g., "timesync-db")
-8. Set master username and password
-9. Choose DB instance size (t2.micro for Free Tier)
-10. Configure storage (20GB is within Free Tier limits)
-11. Set database name (e.g., "timesync_db")
-12. Under "Connectivity" section, select "Yes" for "Public Access" 
-13. Create a new VPC security group
-14. Click "Create database"
-
-After creation, note the endpoint, port, username, password, and database name for the DATABASE_URL environment variable.
-
-## Step 3: Deploy to Elastic Beanstalk
-
-AWS Elastic Beanstalk provides a simple way to deploy and manage applications in AWS.
-
-1. In your project directory, create an Elastic Beanstalk configuration file:
-
+For production, you'll want to add:
 ```
-# .ebextensions/01_flask.config
-option_settings:
-  aws:elasticbeanstalk:container:python:
-    WSGIPath: main:app
-  aws:elasticbeanstalk:application:environment:
-    FLASK_ENV: production
-    FLASK_APP: main.py
-    FLASK_DEBUG: 0
-    JWT_SECRET: your_secure_random_string
-    DATABASE_URL: postgresql://username:password@your-db-endpoint:5432/timesync_db
-    CACHE_TTL: 3600
-    TIMEZONE_INFO_CACHE_TTL: 300
+DATABASE_URL=postgresql://username:password@your-db-host:5432/timesync_db
 ```
 
-2. Initialize Elastic Beanstalk in your project:
-```
-eb init -p python-3.8 timesync-api --region us-east-1
-```
+## Step 4: Set Up a PostgreSQL Database (Optional)
 
-3. Create an Elastic Beanstalk environment:
-```
-eb create timesync-api-env
-```
+1. In your Render dashboard, click "New" and select "PostgreSQL"
+2. Configure the database:
+   - **Name**: `timesync-db` (or your preferred name)
+   - **Database**: `timesync_db`
+   - **User**: Render will generate this for you
+   - **Region**: Choose the same region as your web service
+   - **Instance Type**: Free (for testing, upgrade for production)
+3. After creation, Render will provide you with the database connection details
+4. Update the `DATABASE_URL` environment variable in your web service with these details
 
-4. Wait for the environment to be created and deploy the application
+## Step 5: Configure Automatic Deployments
 
-## Step 4: Configure Security
+Render automatically deploys your application when you push changes to your default branch. No additional configuration is needed for basic CI/CD.
 
-1. Navigate to EC2 > Security Groups
-2. Find the security group for your EB environment
-3. Add inbound rules for:
-   - HTTP (port 80) from anywhere
-   - HTTPS (port 443) from anywhere
-   - Custom TCP (port 5000) from your security group only
+## Step 6: Custom Domain Setup (Optional)
 
-## Step 5: Set Up a Custom Domain (Optional)
-
-1. Register a domain in Route 53 or use an existing domain
-2. Create a record set in Route 53 that points to your Elastic Beanstalk environment
-3. Configure HTTPS with AWS Certificate Manager
-
-## Step 6: Set Up CloudWatch Monitoring
-
-1. In the Elastic Beanstalk console, go to your environment
-2. Click on Monitoring
-3. Configure basic alarms for:
-   - High CPU utilization
-   - High memory usage
-   - Application error rates
+1. In the Render dashboard, go to your web service
+2. Click on the "Settings" tab
+3. Scroll to "Custom Domain"
+4. Click "Add Custom Domain"
+5. Follow the instructions to verify ownership and configure DNS settings
 
 ## Step 7: Verify Deployment
 
-1. Navigate to your Elastic Beanstalk URL
-2. Test the API endpoints using the dashboard or tools like Postman
-3. Monitor logs in CloudWatch
-
-## Cost-Saving Tips for Free Tier
-
-1. Use t2.micro instances which are included in Free Tier
-2. Keep RDS storage under 20GB
-3. Stop instances when not in use
-4. Monitor your Free Tier usage in the AWS Billing Dashboard
-5. Set up billing alerts to avoid unexpected charges
+1. Once deployment is complete, Render will provide a URL for your application
+2. Visit the URL to verify the application is running correctly
+3. Test the API endpoints using the dashboard or tools like Postman
+4. Monitor logs in the Render dashboard
 
 ## Troubleshooting
 
-1. Check EB logs: `eb logs`
-2. SSH into your EB instance: `eb ssh`
-3. Test database connectivity
-4. Verify environment variables are set correctly
-5. Check security group settings
+1. Check logs in the Render dashboard under the "Logs" tab
+2. Verify environment variables are set correctly
+3. If the application fails to start, check the build and start command logs
+4. Ensure your `requirements.txt` file includes all necessary dependencies
 
 ## Scaling Considerations
 
-When you need to scale beyond Free Tier:
-1. Upgrade your database instance
-2. Use auto-scaling for your EB environment
-3. Consider adding a Redis cache (ElastiCache)
-4. Implement CloudFront for content delivery
+When you need to scale beyond the free tier:
+1. Upgrade to a paid plan for more resources
+2. Consider adding a Redis cache for improved performance
+3. Implement a CDN for static assets
 
-## CI/CD Pipeline (Future Enhancement)
+## Render vs. Other Platforms
 
-For continuous deployment:
-1. Set up AWS CodePipeline
-2. Connect to your GitHub repository
-3. Automate testing with AWS CodeBuild
-4. Configure deployment to Elastic Beanstalk
+Render offers several advantages for this application:
+1. Free tier for development and testing
+2. Automatic HTTPS with free SSL certificates
+3. Automatic deployments from GitHub
+4. Built-in PostgreSQL database service
+5. Simple scaling options as your application grows

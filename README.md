@@ -77,7 +77,15 @@ pytest tests/
 
 ## Deployment
 
-See [deployment_guide.md](deployment_guide.md) for detailed AWS deployment instructions.
+### Deploy to Render (Recommended)
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
+
+1. Fork this repository to your GitHub account
+2. Click the "Deploy to Render" button above
+3. Follow the prompts to deploy the application
+
+For detailed instructions, see [deployment_guide.md](deployment_guide.md).
 
 ## License
 

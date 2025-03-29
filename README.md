@@ -85,6 +85,8 @@ pytest tests/
 2. Follow the prompts to deploy the application 
 3. The application will be deployed from https://github.com/Mayanshh/Global-TimesSync-Api.git
 
+Render will automatically configure your application with the correct environment variables and settings.
+
 ## License
 
 MIT

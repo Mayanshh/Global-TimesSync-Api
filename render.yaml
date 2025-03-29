@@ -4,6 +4,7 @@ services:
     name: global-timesync-api
     env: python
     plan: free
+    repo: https://github.com/Mayanshh/Global-TimesSync-Api.git
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn --bind 0.0.0.0:$PORT --reuse-port main:app
     healthCheckPath: /

@@ -77,15 +77,7 @@ pytest tests/
 
 ## Deployment
 
-### Deploy to Render (Recommended)
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Mayanshh/Global-TimesSync-Api.git)
-
-1. Click the "Deploy to Render" button above
-2. Follow the prompts to deploy the application 
-3. The application will be deployed from https://github.com/Mayanshh/Global-TimesSync-Api.git
-
-Render will automatically configure your application with the correct environment variables and settings.
+The application is configured for deployment on various cloud platforms. Contact the author for deployment details.
 
 ## License
 

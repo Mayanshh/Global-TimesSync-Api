@@ -6,14 +6,25 @@ services:
     plan: free
     repo: https://github.com/Mayanshh/Global-TimesSync-Api.git
     buildCommand: |
-      if ! pip install poetry && poetry install; then
-        # Fallback to installing packages directly
-        pip install bcrypt==4.0.1 email-validator==2.0.0 fastapi==0.95.1 flask==2.3.2 flask-sqlalchemy==3.0.3 \
-                    gunicorn==23.0.0 passlib==1.7.4 psycopg2-binary==2.9.6 pydantic==1.10.7 pyjwt==2.7.0 \
-                    python-dateutil==2.8.2 python-dotenv==1.0.0 python-jose==3.3.0 python-multipart==0.0.6 \
-                    pytz==2023.3 uvicorn==0.22.0
+      # Install dependencies with pip directly and make sure they're globally accessible
+      pip install --upgrade pip
+      python -m pip install --user bcrypt==4.0.1 email-validator==2.0.0 fastapi==0.95.1 flask==2.3.2 
+      python -m pip install --user flask-sqlalchemy==3.0.3 passlib==1.7.4 psycopg2-binary==2.9.6 
+      python -m pip install --user pydantic==1.10.7 pyjwt==2.7.0 python-dateutil==2.8.2 python-dotenv==1.0.0
+      python -m pip install --user python-jose==3.3.0 python-multipart==0.0.6 pytz==2023.3 uvicorn==0.22.0
+      python -m pip install --user gunicorn==23.0.0
+
+      # Create a symlink to gunicorn in a directory in PATH if it's not already available
+      if ! which gunicorn; then
+        GUNICORN_PATH=$(python -m pip show gunicorn | grep "Location:" | awk '{print $2}')/gunicorn/
+        if [ -f "$GUNICORN_PATH/bin/gunicorn" ]; then
+          ln -sf "$GUNICORN_PATH/bin/gunicorn" /usr/local/bin/gunicorn
+        elif [ -f "$GUNICORN_PATH/../bin/gunicorn" ]; then
+          ln -sf "$GUNICORN_PATH/../bin/gunicorn" /usr/local/bin/gunicorn
+        fi
+        which gunicorn || echo "WARNING: gunicorn still not found in PATH"
       fi
-    startCommand: gunicorn --bind 0.0.0.0:$PORT --reuse-port main:app
+    startCommand: python -m gunicorn.app.wsgiapp --bind 0.0.0.0:$PORT --reuse-port main:app
     healthCheckPath: /
     autoDeploy: true
     envVars:
